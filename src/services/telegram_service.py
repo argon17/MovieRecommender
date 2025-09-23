@@ -1,3 +1,4 @@
+"""Service for sending messages via Telegram Bot API."""
 import logging
 from typing import Union
 import telegram
@@ -18,7 +19,7 @@ class TelegramService:
         """
         if not all([bot_token, chat_id]):
             raise ValueError("Telegram Bot Token or Chat ID is not configured.")
-        
+
         self.bot = telegram.Bot(token=bot_token)
         self.chat_id = chat_id
         logging.info("TelegramService initialized successfully.")

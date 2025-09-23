@@ -3,7 +3,7 @@
 import asyncio
 import logging
 import sys
-from typing import NoReturn
+
 from src.config.settings import (
     REDDIT_CLIENT_ID,
     REDDIT_CLIENT_SECRET,
@@ -49,11 +49,17 @@ async def main() -> None:
     except ValueError as e:
         logging.critical("Configuration error: %s. Please check your .env file.", e)
         sys.exit(1)
-    except Exception as e:
+    except (ConnectionError, TimeoutError, OSError) as e:
+        logging.critical("Network or system error occurred: %s", e)
+        sys.exit(1)
+    except KeyboardInterrupt:
+        logging.info("Bot script interrupted by user.")
+        sys.exit(0)
+    except Exception as e:  # pylint: disable=broad-exception-caught
         logging.critical("An unexpected error occurred in main: %s", e)
         sys.exit(1)
 
-def run() -> NoReturn:
+def run() -> None:
     """Entry point for the application."""
     try:
         asyncio.run(main())

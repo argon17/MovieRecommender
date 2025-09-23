@@ -1,0 +1,11 @@
+[MESSAGES CONTROL]
+# Disable specific warnings that are not relevant for this project
+disable=too-few-public-methods
+
+[FORMAT]
+# Maximum number of characters on a single line
+max-line-length=100
+
+[DESIGN]
+# Minimum number of public methods for a class (default is 2)
+min-public-methods=1

@@ -1,7 +1,9 @@
+"""Service for fetching comments from Reddit using AsyncPRAW."""
 import logging
 from typing import List, Optional
 import asyncpraw
 from asyncpraw.exceptions import AsyncPRAWException
+
 
 class RedditService:
     """Handles all interactions with the Reddit API."""
@@ -13,13 +15,13 @@ class RedditService:
             client_id: Reddit API client ID
             client_secret: Reddit API client secret
             user_agent: Reddit API user agent string
-        
+
         Raises:
             ValueError: If any of the required credentials are missing
         """
         if not all([client_id, client_secret, user_agent]):
             raise ValueError("Reddit API credentials are not fully configured.")
-        
+
         self.reddit = asyncpraw.Reddit(
             client_id=client_id,
             client_secret=client_secret,
@@ -27,7 +29,9 @@ class RedditService:
         )
         logging.info("RedditService initialized successfully.")
 
-    async def get_comments(self, subreddits: List[str], limit_per_subreddit: int = 100) -> Optional[str]:
+    async def get_comments(
+        self, subreddits: List[str], limit_per_subreddit: int = 100
+    ) -> Optional[str]:
         """
         Fetches the most recent comments from a list of subreddits.
 
@@ -50,7 +54,7 @@ class RedditService:
                     async for comment in submission.comments.list()[:limit_per_subreddit // 10]:
                         if comment.body and len(comment.body) > 50:
                             all_comments.append(comment.body)
-            
+
             logging.info("Successfully fetched %d comments.", len(all_comments))
             return "\n---\n".join(all_comments)
 

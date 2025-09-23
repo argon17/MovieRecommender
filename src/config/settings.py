@@ -1,3 +1,4 @@
+"""Configuration settings for the Movie Recommender Bot."""
 import os
 from dotenv import load_dotenv
 
