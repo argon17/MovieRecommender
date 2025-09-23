@@ -18,18 +18,32 @@ class LLMService:
         logging.info("Sending comments to Gemini for analysis...")
         
         prompt = f"""
-        You are a movie critic and recommendation expert. Your task is to analyze the following Reddit comments from the past week and generate a "Weekly Movie Buzz" report.
+        You are a seasoned movie critic and recommendation expert. Analyze the following Reddit comments from the past week and generate a "Weekly Movie Buzz" report.  
 
-        Based on the collective sentiment, recurring movie titles, and discussions in the comments provided below, please do the following:
+        Your task is to synthesize the collective voice of Reddit discussions into a clear, engaging digest for movie fans. Focus on movies that stand out based on the comments, whether due to excitement, praise, debate, or controversy.  
 
-        1.  **Identify 1 to 3 movies** that are generating the most positive buzz or interesting discussion.
-        2.  For each movie, write a short, compelling paragraph explaining *why* it's being recommended this week, citing the tone of the Reddit discussions (e.g., "users are praising its stunning visuals," "many are debating its controversial ending").
-        3.  Format the output clearly in Markdown with a main title, and use bolding for movie titles. Do not include any introductory or concluding sentences outside of the report itself.
+        ### Instructions:
+        1. **Identify 1 to 3 movies** that generated the most attention this week.  
+        - Prioritize movies mentioned frequently, receiving strong positive sentiment, or sparking interesting debate.  
+        - If there is a balance of hype and criticism, capture both perspectives.  
 
-        Here are the comments:
-        ---
-        {comments}
-        ---
+        2. For each chosen movie:  
+        - Create a **subheading with the movie title in bold**.  
+        - Write a **short but rich paragraph (3–5 sentences)** explaining why this movie is recommended or noteworthy this week.  
+        - Reference the Reddit buzz directly — highlight what people are saying (e.g., “users loved the soundtrack,” “some found the pacing slow but praised the lead performance”).  
+        - Be specific about aspects like performances, direction, visuals, themes, or emotional impact.  
+
+        3. **Formatting requirements:**  
+        - Use Markdown.  
+        - Include a main title: `# Weekly Movie Buzz`.  
+        - Use `##` for each movie subheading.  
+        - Do not add an introduction or conclusion outside of the report.  
+
+        Here are the comments to analyze:  
+        ---  
+        {comments}  
+        ---  
+
         """
         try:
             response = self.model.generate_content(prompt)
