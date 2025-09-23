@@ -1,5 +1,9 @@
+"""Main entry point for the Movie Recommender Bot."""
+
 import asyncio
 import logging
+import sys
+from typing import NoReturn
 from src.config.settings import (
     REDDIT_CLIENT_ID,
     REDDIT_CLIENT_SECRET,
@@ -18,8 +22,13 @@ from src.bot.movie_bot import MovieBot
 # Configure logging
 logging.basicConfig(**LOGGING_CONFIG)
 
-async def main():
-    """Initializes services and runs the bot."""
+async def main() -> None:
+    """
+    Initialize services and run the bot.
+    
+    This function sets up all required services (Reddit, LLM, Telegram)
+    and orchestrates the movie recommendation workflow.
+    """
     try:
         # Initialize Services
         reddit_service = RedditService(
@@ -38,12 +47,19 @@ async def main():
         await bot.run_weekly_flow(MOVIE_SUBREDDITS)
 
     except ValueError as e:
-        logging.critical(f"Configuration error: {e}. Please check your .env file.")
+        logging.critical("Configuration error: %s. Please check your .env file.", e)
+        sys.exit(1)
     except Exception as e:
-        logging.critical(f"An unexpected error occurred in main: {e}")
+        logging.critical("An unexpected error occurred in main: %s", e)
+        sys.exit(1)
 
-if __name__ == "__main__":
+def run() -> NoReturn:
+    """Entry point for the application."""
     try:
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
         logging.info("Bot script manually interrupted.")
+        sys.exit(0)
+
+if __name__ == "__main__":
+    run()

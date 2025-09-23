@@ -1,9 +1,20 @@
 import logging
+from typing import Optional
 import google.generativeai as genai
+from google.api_core.exceptions import GoogleAPIError
 
 class LLMService:
     """Handles interactions with the Google Gemini LLM."""
-    def __init__(self, api_key):
+    def __init__(self, api_key: str) -> None:
+        """
+        Initialize the LLM service with API key.
+
+        Args:
+            api_key: Google Gemini API key
+
+        Raises:
+            ValueError: If the API key is not provided
+        """
         if not api_key:
             raise ValueError("Gemini API key is not configured.")
         
@@ -11,9 +22,15 @@ class LLMService:
         self.model = genai.GenerativeModel('gemini-1.5-flash-latest')
         logging.info("LLMService initialized successfully.")
 
-    def get_movie_recommendation(self, comments):
+    def get_movie_recommendation(self, comments: str) -> Optional[str]:
         """
         Analyzes comments to generate a movie recommendation.
+
+        Args:
+            comments: String containing Reddit comments to analyze
+
+        Returns:
+            A formatted movie recommendation string, or None if an error occurs
         """
         logging.info("Sending comments to Gemini for analysis...")
         
@@ -49,6 +66,6 @@ class LLMService:
             response = self.model.generate_content(prompt)
             logging.info("Successfully received recommendation from Gemini.")
             return response.text
-        except Exception as e:
-            logging.error(f"Failed to get recommendation from Gemini: {e}")
+        except GoogleAPIError as e:
+            logging.error("Failed to get recommendation from Gemini: %s", e)
             return None
