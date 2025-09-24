@@ -50,8 +50,8 @@ class RedditService:
                 subreddit = await self.reddit.subreddit(sub_name)
                 # Fetch comments from 'hot' posts for relevance
                 async for submission in subreddit.hot(limit=10):
-                    submission.comments.replace_more(limit=0)
-                    async for comment in submission.comments.list()[:limit_per_subreddit // 10]:
+                    await submission.comments.replace_more(limit=0)
+                    for comment in submission.comments.list()[:limit_per_subreddit // 10]:
                         if comment.body and len(comment.body) > 50:
                             all_comments.append(comment.body)
 
