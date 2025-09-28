@@ -1,34 +1,50 @@
 # Weekly Movie Recommendation Bot
 
-This project uses Python to fetch recent comments about movies from Reddit, analyze them with the Google Gemini LLM, and send a curated weekly recommendation to a Telegram chat.
+This project uses Python to fetch recent comments about movies from Reddit, analyze them with the Google Gemini LLM, and send a curated weekly recommendation to a Telegram chat. The bot is built with modern async/await patterns for efficient API interactions.
 
 ## Project Structure
 
 ```
 MovieRecommender/
+├── .github/
+│   └── workflows/
+│       └── pylint.yml          # GitHub Actions workflow for code quality
 ├── src/
+│   ├── __init__.py
 │   ├── services/
-│   │   ├── reddit_service.py
-│   │   ├── llm_service.py
-│   │   └── telegram_service.py
+│   │   ├── __init__.py
+│   │   ├── reddit_service.py   # Async Reddit API client
+│   │   ├── llm_service.py      # Google Gemini LLM integration
+│   │   └── telegram_service.py # Telegram bot messaging
 │   ├── bot/
-│   │   └── movie_bot.py
+│   │   ├── __init__.py
+│   │   └── movie_bot.py        # Main bot orchestration logic
 │   └── config/
-│       └── settings.py
-├── main.py
-├── requirements.txt
-└── .env
+│       ├── __init__.py
+│       └── settings.py         # Configuration and environment variables
+├── .pylintrc                   # Pylint configuration
+├── .gitignore                  # Git ignore patterns
+├── main.py                     # Application entry point
+├── requirements.txt            # Python dependencies
+├── LICENSE                     # MIT License
+└── .env                        # Environment variables (create this file)
 ```
 
 ## Architecture
 
-The process flow is simple:
+The bot follows an async, service-oriented architecture:
 
-1. A scheduler (like cron) triggers the Python script once a week
-2. The script connects to the Reddit API using `praw` to pull recent comments from specified movie-related subreddits
-3. All comments are compiled into a single text block and sent to the Gemini API with a carefully crafted prompt
-4. Gemini analyzes the text and returns a formatted "Weekly Movie Buzz" report in Markdown
-5. The script sends this report to a specified Telegram chat via a Telegram Bot
+1. **Scheduled Execution**: A scheduler (cron, GitHub Actions, etc.) triggers the script weekly
+2. **Reddit Data Collection**: Uses `asyncpraw` to asynchronously fetch recent comments from movie-related subreddits
+3. **LLM Analysis**: Sends compiled comments to Google Gemini API with a specialized prompt for movie recommendations
+4. **Content Generation**: Gemini returns a formatted "Weekly Movie Buzz" report in Markdown
+5. **Telegram Delivery**: The report is sent to a specified Telegram chat via the bot API
+
+### Key Features
+- **Asynchronous Operations**: All API calls are non-blocking for better performance
+- **Error Handling**: Comprehensive error handling with proper logging
+- **Code Quality**: Automated code quality checks with Pylint (target score: 9.0+)
+- **Configuration Management**: Environment-based configuration with validation
 
 ## 🚀 Step 1: Prerequisites & Setup
 
@@ -96,7 +112,10 @@ You need credentials for three services. This is the most important step.
 3. Create a Python virtual environment (recommended):
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   # On Windows:
+   venv\Scripts\activate
+   # On Linux/macOS:
+   source venv/bin/activate
    ```
 
 4. Install the required libraries:
@@ -115,6 +134,10 @@ python main.py
 ```
 
 Check your Telegram chat. You should receive the movie recommendation message!
+
+### Development Mode
+
+For development and testing, you can run the bot with more verbose logging by setting the log level in your environment or modifying the settings.
 
 ## 🤖 Step 3: Automating with Cron
 
@@ -140,6 +163,41 @@ To schedule the bot, follow these steps:
 
 3. Save and close the file. Your bot is now automated!
 
-## License
+### Alternative: GitHub Actions
 
-MIT License
+You can also use GitHub Actions to run the bot on a schedule. The repository includes a Pylint workflow for code quality checks. You can extend this to include scheduled bot runs.
+
+## 🧪 Development
+
+### Code Quality
+
+This project uses Pylint for code quality assurance with a target score of 9.0 or higher. The GitHub Actions workflow automatically runs Pylint on every push and pull request.
+
+To run Pylint locally:
+```bash
+pylint --rcfile=.pylintrc src/ main.py
+```
+
+### Dependencies
+
+- `asyncpraw`: Async Python Reddit API Wrapper
+- `google-generativeai`: Google Gemini AI API client
+- `python-telegram-bot`: Telegram Bot API wrapper
+- `python-dotenv`: Environment variable management
+
+### GitHub Actions Artifacts
+
+The Pylint workflow generates reports that are uploaded as artifacts. You can download these reports from the Actions tab in your GitHub repository to review code quality metrics and suggestions.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes and ensure they pass Pylint checks
+4. Commit your changes (`git commit -m 'Add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
