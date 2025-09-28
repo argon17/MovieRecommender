@@ -58,6 +58,10 @@ async def main() -> None:
     except Exception as e:  # pylint: disable=broad-exception-caught
         logging.critical("An unexpected error occurred in main: %s", e)
         sys.exit(1)
+    finally:
+        logging.info("Shutting down services...")
+        await reddit_service.close()
+        await telegram_service.close()
 
 def run() -> None:
     """Entry point for the application."""

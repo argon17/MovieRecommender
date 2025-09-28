@@ -46,3 +46,10 @@ class TelegramService:
         except TelegramError as e:
             logging.error("Failed to send message to Telegram: %s", e)
             return False
+    
+    async def close(self) -> None:
+        """Shuts down the Telegram Bot's network resources."""
+        if self.bot:
+            await self.bot.shutdown()
+            logging.info("Telegram service shut down.")
+

@@ -63,3 +63,9 @@ class RedditService:
         except (AsyncPRAWException, TypeError) as e:
             logging.error("Failed to fetch comments from Reddit: %s", e)
             return None
+
+    async def close(self) -> None:
+        """Closes the Reddit API session."""
+        if self.reddit:
+            await self.reddit.close()
+            logging.info("Reddit service session closed.")
