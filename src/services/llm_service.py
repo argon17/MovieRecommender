@@ -20,7 +20,7 @@ class LLMService:
             raise ValueError("Gemini API key is not configured.")
 
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        self.model = genai.GenerativeModel('gemini-2.0-flash-001')
         logging.info("LLMService initialized successfully.")
 
     def get_movie_recommendation(self, comments: str) -> Optional[str]:
