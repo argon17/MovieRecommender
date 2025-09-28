@@ -50,7 +50,9 @@ class RedditService:
                 subreddit = await self.reddit.subreddit(sub_name)
                 # Fetch comments from 'hot' posts for relevance
                 async for submission in subreddit.hot(limit=10):
-                    await submission.comments.replace_more(limit=0)
+                    # await submission.comments.replace_more()
+                    await submission.load()
+                    logging.info("Fetched %d comments from submission.", len(submission.comments.list()))
                     for comment in submission.comments.list()[:limit_per_subreddit // 10]:
                         if comment.body and len(comment.body) > 50:
                             all_comments.append(comment.body)
@@ -58,6 +60,6 @@ class RedditService:
             logging.info("Successfully fetched %d comments.", len(all_comments))
             return "\n---\n".join(all_comments)
 
-        except AsyncPRAWException as e:
+        except (AsyncPRAWException, TypeError) as e:
             logging.error("Failed to fetch comments from Reddit: %s", e)
             return None
